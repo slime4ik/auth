@@ -10,9 +10,8 @@
 
 ## 🚀 Как запустить
 1. Установите зависимости: `pip install -r requirements.txt`
-2. Запустите Redis: `redis-server`
-3. Запустите Celery: `celery -A master worker -l info`
-4. Запустите сервер: `python manage.py runserver`
+2. Запустите Celery: `celery -A master worker -l info`
+3. Запустите сервер: `python manage.py runserver`
 
 ## 📌 Основные endpoints
 - `POST /api/registration/` - Начало регистрации (email + username)
