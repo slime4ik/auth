@@ -101,8 +101,8 @@ class RegistrationPasswordAPIView(GenericAPIView):
                 response.set_cookie(
                     key='refresh_token',
                     value=str(refresh),
-                    httponly=False,
-                    secure=False,
+                    httponly=True,
+                    secure=True,
                     samesite="Lax",
                     max_age=7 * 24 * 3600,
                     domain="localhost"
@@ -110,8 +110,8 @@ class RegistrationPasswordAPIView(GenericAPIView):
                 response.set_cookie(
                     key='access_token',
                     value=str(access),
-                    httponly=False,
-                    secure=False,
+                    httponly=True,
+                    secure=True,
                     samesite="Lax",
                     max_age=60 * 15,
                     domain="localhost"
@@ -184,7 +184,7 @@ class LoginCodeAPIView(GenericAPIView):
                     key='refresh_token',
                     value=str(refresh),
                     httponly=True,
-                    secure=False,
+                    secure=True,
                     samesite="Lax",
                     max_age=604800,  # 7 дней
                     domain="localhost"
@@ -193,7 +193,7 @@ class LoginCodeAPIView(GenericAPIView):
                     key='access_token',
                     value=str(refresh.access_token),
                     httponly=True,
-                    secure=False,
+                    secure=True,
                     samesite="Lax",
                     max_age=60 * 15,  # 15 минут
                     domain="localhost"
@@ -274,8 +274,8 @@ class CustomTokenRefreshView(TokenRefreshView):
                 response.set_cookie(
                     key='access_token',
                     value=response.data['access'],
-                    httponly=False,
-                    secure=False,
+                    httponly=True,
+                    secure=True,
                     samesite="Lax",
                     max_age=60 * 15,
                     domain="localhost"
