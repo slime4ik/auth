@@ -250,23 +250,57 @@ class CheckAuthAPIView(GenericAPIView):
 
 # Кастомная выдача access токена
 class CustomTokenRefreshView(TokenRefreshView):
+    """
+    /token/refresh/
+    - web: читает refresh_token из куков и кладет новые токены обратно в куки
+    - mobile: читает refresh_token из заголовка (или тела) и возвращает токены в json
+    """
     def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
-        refresh_token = request.COOKIES.get('refresh_token')
-        
-        if response.status_code == 200 and refresh_token:
-            response.set_cookie(
-                key='access_token',
-                value=response.data['access'],
-                httponly=False,
-                secure=False,
-                samesite="Lax",
-                max_age=60 * 15,  # 15 минут
-                domain="localhost"
+        client_type = request.headers.get('X-Client-Type', 'web')
+
+        if client_type == 'web':
+            # для браузера refresh берем из куков
+            refresh_token = request.COOKIES.get('refresh_token')
+            if not refresh_token:
+                return Response({'message': 'Нет refresh_token'}, status=401)
+
+            # передаем в сериализатор
+            request.data['refresh'] = refresh_token
+
+            response = super().post(request, *args, **kwargs)
+
+            if response.status_code == 200:
+                # сетим новые куки
+                response.set_cookie(
+                    key='access_token',
+                    value=response.data['access'],
+                    httponly=False,
+                    secure=False,
+                    samesite="Lax",
+                    max_age=60 * 15,
+                    domain="localhost"
+                )
+                # refresh_token не обновляем (по стандарту SimpleJWT он статичен)
+                del response.data['access']  # убираем из тела ответа
+            return response
+
+        else:
+            # мобилка: refresh_token приходит в заголовке (или теле)
+            refresh_token = (
+                request.headers.get('X-Refresh-Token') or 
+                request.data.get('refresh')
             )
-            del response.data['access']  # Убираем из тела ответа
-        return response
-    
+            if not refresh_token:
+                return Response({'message': 'Нет refresh_token'}, status=401)
+
+            # подкладываем refresh в data для стандартной логики simplejwt
+            request.data['refresh'] = refresh_token
+
+            # вызываем стандартный метод
+            response = super().post(request, *args, **kwargs)
+
+            # ⚠️ ничего не ставим в куки — просто отдаем JSON
+            return response
 class UserViewSet(viewsets.ViewSet):
 
     def get_permissions(self):
