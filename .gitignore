@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+*.pyo
+*.pyd
+*.pdb
+*.db
+*.sqlite3
+*.log
+
+# Virtualenv
+env/
+venv/
+ENV/
+.venv/
+env.bak/
+.env
+
+# Django
+*.sqlite3
+/media/
+/staticfiles/
+/static_root/
+/db.sqlite3
+
+# VSCode
+.vscode/
+
+# Mac/Linux
+.DS_Store
+
+# Test coverage
+htmlcov/
+.coverage
+coverage.xml
+*.cover
+
+# Migrations (если не хочешь коммитить их)
+**/migrations/*.pyc
+**/migrations/__pycache__/
+**/migrations/*.log
+
+# Pytest
+.pytest_cache/
+
+# mypy / etc.
+.mypy_cache/
