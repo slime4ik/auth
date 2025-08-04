@@ -231,7 +231,7 @@ class LogoutAPIView(GenericAPIView):
                 response.delete_cookie('refresh_token')
                 return response
 
-            # Мобилка → просто ответ
+            # Мобилка просто ответ
             return Response({'message': 'Вы вышли из аккаунта'}, status=status.HTTP_202_ACCEPTED)
 
         except Exception as e:
@@ -299,7 +299,7 @@ class CustomTokenRefreshView(TokenRefreshView):
             # вызываем стандартный метод
             response = super().post(request, *args, **kwargs)
 
-            # ⚠️ ничего не ставим в куки — просто отдаем JSON
+            # ничего не ставим в куки — просто отдаем JSON
             return response
 class UserViewSet(viewsets.ViewSet):
 
